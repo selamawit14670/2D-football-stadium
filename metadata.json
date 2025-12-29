@@ -1,0 +1,5 @@
+{
+  "name": "2D Football Stadium Simulator",
+  "description": "A high-fidelity 2D stadium visualization tool based on OpenGL design principles, featuring interactive front and side stand views with dynamic lighting and seating.",
+  "requestFramePermissions": []
+}
