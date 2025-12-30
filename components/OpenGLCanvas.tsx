@@ -19,11 +19,8 @@ const OpenGLCanvas: React.FC<Props> = ({ view }) => {
     ctx.fillStyle = '#010103';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (view === StadiumView.FRONT) {
-      renderFrontStandView(ctx);
-    } else {
-      renderSideStandView(ctx, view);
-    }
+    // Only render front view as requested
+    renderFrontStandView(ctx);
   };
 
   const renderFrontStandView = (ctx: CanvasRenderingContext2D) => {
@@ -236,12 +233,8 @@ const OpenGLCanvas: React.FC<Props> = ({ view }) => {
 
   const drawFloodLightPole = (ctx: CanvasRenderingContext2D, x: number, bottomY: number, topY: number) => {
     const poleWidth = 12;
-    
-    // Main structural beams
     ctx.fillStyle = '#111';
     ctx.fillRect(x - poleWidth/2, topY, poleWidth, bottomY - topY);
-    
-    // Lattice cross-bracing
     ctx.strokeStyle = '#222';
     ctx.lineWidth = 1.5;
     const segments = 10;
@@ -255,24 +248,15 @@ const OpenGLCanvas: React.FC<Props> = ({ view }) => {
         ctx.lineTo(x - poleWidth/2, curY + segH);
         ctx.stroke();
     }
-
-    // Light Cluster Head
-    const headW = 50;
-    const headH = 25;
+    const headW = 50, headH = 25;
     ctx.fillStyle = '#050505';
     ctx.fillRect(x - headW/2, topY - headH, headW, headH);
-    
-    // Light Glow (Massive)
     const glowSize = 180;
     const gradient = ctx.createRadialGradient(x, topY - headH/2, 0, x, topY - headH/2, glowSize);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
     gradient.addColorStop(1, 'transparent');
     ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(x, topY - headH/2, glowSize, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 6 individual flood bulbs
+    ctx.beginPath(); ctx.arc(x, topY - headH/2, glowSize, 0, Math.PI * 2); ctx.fill();
     for(let i=0; i<3; i++) {
         for(let j=0; j<2; j++) {
             const bx = x - headW/2 + 10 + i * 15;
@@ -282,29 +266,6 @@ const OpenGLCanvas: React.FC<Props> = ({ view }) => {
     }
   }
 
-  const renderSideStandView = (ctx: CanvasRenderingContext2D, side: StadiumView) => {
-    const w = 1000, h = 600;
-    ctx.fillStyle = '#0a0a30';
-    ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    if (side === StadiumView.LEFT) {
-      ctx.moveTo(0, 120); ctx.lineTo(800, 180);
-      ctx.lineTo(800, 420); ctx.lineTo(0, 480);
-    } else {
-      ctx.moveTo(1000, 120); ctx.lineTo(200, 180);
-      ctx.lineTo(200, 420); ctx.lineTo(1000, 480);
-    }
-    ctx.fill();
-    ctx.fillStyle = 'white';
-    ctx.font = 'bold 36px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${side} STAND PERSPECTIVE`, 500, 80);
-    ctx.font = '14px monospace';
-    ctx.fillStyle = '#999';
-    ctx.fillText("PRESS [F] TO RESET VIEW", 500, 560);
-  };
-
   const drawLight = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number = 135, drawSource: boolean = true) => {
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
@@ -312,18 +273,11 @@ const OpenGLCanvas: React.FC<Props> = ({ view }) => {
     gradient.addColorStop(0.4, 'rgba(100, 100, 255, 0.1)');
     gradient.addColorStop(1, 'transparent');
     ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fill();
-    
+    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
     if (drawSource) {
       ctx.fillStyle = 'white';
-      ctx.beginPath();
-      ctx.arc(x, y, 11, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#666';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 11, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#666'; ctx.lineWidth = 1.5; ctx.stroke();
     }
   };
 

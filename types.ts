@@ -1,8 +1,6 @@
 
 export enum StadiumView {
-  FRONT = 'FRONT',
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT'
+  FRONT = 'FRONT'
 }
 
 export interface LightPosition {
